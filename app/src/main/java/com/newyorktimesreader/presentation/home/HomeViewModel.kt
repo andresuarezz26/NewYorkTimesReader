@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.newyorktimesreader.di.MainScheduler
 import com.newyorktimesreader.domain.GetArticlesUseCase
 import com.newyorktimesreader.domain.model.Article
+import com.newyorktimesreader.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -15,7 +16,7 @@ import javax.inject.Inject
 open class HomeViewModel @Inject constructor(
   private val getArticlesUseCase: GetArticlesUseCase,
   @MainScheduler private val mainScheduler: Scheduler) :
-  ViewModel() {
+  BaseViewModel() {
 
   internal val compositeDisposable = CompositeDisposable()
   private val _listOfArticles = MutableLiveData<List<Article>>()
@@ -35,8 +36,7 @@ open class HomeViewModel @Inject constructor(
     )
   }
 
-  override fun onCleared() {
-    super.onCleared()
+  override fun dispose() {
     compositeDisposable.dispose()
   }
 }

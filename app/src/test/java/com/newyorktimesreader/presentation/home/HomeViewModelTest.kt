@@ -30,32 +30,34 @@ class HomeViewModelTest {
 
   private lateinit var homeViewModel : HomeViewModel
 
-
+  val result = getMockList()
 
   // 🔑 1. Setup method to configure mocks
   @Before
   fun setup() {
-
-  }
-
-  @Test
-  fun whenGetArticlesSuccess_thenVerifyListOfArticles() {
-    // When
-    val result = getMockList()
+    // The use case is invoked when viewmodel inits
     whenever(getArticlesUseCase())
       .thenReturn(Single.just(result))
     val trampolineScheduler = TrampolineScheduler.instance()
 
-    // Then
     homeViewModel = HomeViewModel(getArticlesUseCase, trampolineScheduler)
+  }
 
-    // Assert
+  @Test
+  fun whenGetArticlesSuccess_thenVerifyListOfArticles() {
+
     assertEquals(homeViewModel.listOfArticles.value, result)
+  }
+
+  @Test
+  fun whenDispose_thenVerifyCompositeDisposableIsDisposed() {
+    homeViewModel.dispose()
+
+    assertTrue(homeViewModel.compositeDisposable.isDisposed)
   }
 
 
   private fun getMockList() : List<Article> {
     return listOf(Article(title = "1", author = "", imageUrl=""))
   }
-
 }
