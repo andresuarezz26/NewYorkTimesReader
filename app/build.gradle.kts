@@ -43,6 +43,11 @@ dependencies {
 
   // Presentation
   implementation(libs.androidx.navigation.compose)
+  implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
+  // Test rules and transitive dependencies:
+  androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.10.0")
+// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+  debugImplementation("androidx.compose.ui:ui-test-manifest:1.10.0")
 
   // General
   implementation(libs.kotlinx.serialization.json)
@@ -57,6 +62,11 @@ dependencies {
   implementation("io.reactivex.rxjava3:rxjava:3.0.2")
   implementation("io.reactivex.rxjava3:rxkotlin:3.0.0")
   implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+
+  // Mockito
+  testImplementation("org.mockito:mockito-core:5.10.0")
+  testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+  androidTestImplementation("org.mockito:mockito-android:5.10.0")
 
 
   implementation(libs.androidx.core.ktx)
@@ -76,4 +86,5 @@ dependencies {
   testImplementation("androidx.arch.core:core-testing:2.2.0")
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
+  testImplementation(kotlin("test"))
 }

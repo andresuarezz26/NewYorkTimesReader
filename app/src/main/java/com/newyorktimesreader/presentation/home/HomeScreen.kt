@@ -1,39 +1,64 @@
 package com.newyorktimesreader.presentation.home
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.newyorktimesreader.domain.model.Article
+import com.newyorktimesreader.presentation.home.widget.ArticleCard
 
 @Composable
 fun HomeScreen(
   onNavigateToDetail: (String) -> Unit,
   viewModel: HomeViewModel = hiltViewModel()
 ) {
-  viewModel.getArticles()
-  val text = remember {
-    mutableStateOf("")
-  }
-  Column(
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Center,
-    modifier = Modifier.fillMaxSize()
-  ) {
-    OutlinedTextField(value = text.value, onValueChange = {
-      text.value = it
-    })
+  val listOfArticles = viewModel.listOfArticles.observeAsState(emptyList())
 
-    Button(onClick = { onNavigateToDetail(text.value) }) {
-      Text("Next Screen")
+  HomeScreenContent(listOfArticles.value, onNavigateToDetail)
+}
+
+@Composable
+fun HomeScreenContent(listOfArticles: List<Article>, onNavigateToDetail: (String) -> Unit) {
+  LazyColumn(
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(16.dp)
+  ) {
+    item {
+      BasicText(text = "Top Stories",
+        style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))
+      Spacer(modifier = Modifier.height(16.dp))
+    }
+
+    items(listOfArticles) { article ->
+      ArticleCard(article) {
+        onNavigateToDetail(it)
+      }
     }
   }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview() {
+  HomeScreenContent(
+    listOf(
+      Article(title = "Sample Article", author = "Author", imageUrl = ""),
+      Article(title = "Sample Article", author = "Author", imageUrl = ""),
+          Article(title = "Sample Article", author = "Author", imageUrl = ""),
+        Article(title = "Sample Article", author = "Author", imageUrl = "")
+    ), onNavigateToDetail = {})
 }
 

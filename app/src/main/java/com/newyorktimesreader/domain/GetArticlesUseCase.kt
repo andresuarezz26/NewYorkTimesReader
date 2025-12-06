@@ -24,6 +24,39 @@ class GetArticlesUseCaseImpl @Inject constructor(
           imageUrl = "https://via.placeholder.com/150"
         ),
         Article(
+          title = "Article 1",
+          author = "Description 1",
+          imageUrl = "https://via.placeholder.com/150"
+        ),
+        Article(
+          title = "Article 1",
+          author = "Description 1",
+          imageUrl = "https://via.placeholder.com/150"
+        ),
+        Article(
+          title = "Article 1",
+          author = "Description 1",
+          imageUrl = "https://via.placeholder.com/150"
+        ),
+        Article(
+          title = "Article 1",
+          author = "Description 1",
+          imageUrl = "https://via.placeholder.com/150"
+        ),
+        Article(
+          title = "Article 1",
+          author = "Description 1",
+          imageUrl = "https://via.placeholder.com/150"
+        ),Article(
+          title = "Article 1",
+          author = "Description 1",
+          imageUrl = "https://via.placeholder.com/150"
+        ),Article(
+          title = "Article 1",
+          author = "Description 1",
+          imageUrl = "https://via.placeholder.com/150"
+        ),
+        Article(
           title = "Article 2",
           author = "Description 2",
           imageUrl = "https://via.placeholder.com/150"

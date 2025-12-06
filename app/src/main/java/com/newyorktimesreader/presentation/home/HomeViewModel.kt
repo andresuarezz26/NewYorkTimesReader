@@ -21,7 +21,11 @@ open class HomeViewModel @Inject constructor(
   private val _listOfArticles = MutableLiveData<List<Article>>()
   val listOfArticles: LiveData<List<Article>> = _listOfArticles
 
-  fun getArticles() {
+  init {
+    getArticles()
+  }
+
+  private fun getArticles() {
     compositeDisposable.add(
       getArticlesUseCase.invoke()
         .observeOn(mainScheduler)
@@ -31,7 +35,8 @@ open class HomeViewModel @Inject constructor(
     )
   }
 
-  fun clear() {
+  override fun onCleared() {
+    super.onCleared()
     compositeDisposable.dispose()
   }
 }
