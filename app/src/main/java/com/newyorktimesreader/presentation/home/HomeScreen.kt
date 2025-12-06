@@ -11,9 +11,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun HomeScreen(onNavigateToDetail: (String) -> Unit) {
+fun HomeScreen(
+  onNavigateToDetail: (String) -> Unit,
+  viewModel: HomeViewModel = hiltViewModel()
+) {
+  viewModel.getArticles()
   val text = remember {
     mutableStateOf("")
   }
