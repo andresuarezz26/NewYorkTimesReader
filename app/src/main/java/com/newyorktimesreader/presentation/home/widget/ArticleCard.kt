@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.layout.ContentScale.Companion.FillWidth
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.newyorktimesreader.domain.model.Article
 
 @Composable
@@ -27,16 +27,18 @@ fun ArticleCard(article: Article, onNavigateToDetail: (String) -> Unit) {
 
     Text(
       text = article.title,
-      style = MaterialTheme.typography.titleMedium // Use semantic typography
+      style = MaterialTheme.typography.titleMedium
     )
     Spacer(modifier = Modifier.height(8.dp))
-    Box(modifier = Modifier
-      .fillMaxWidth()
-      .height(200.dp)
-      .background(color = androidx.compose.ui.graphics.Color.Gray),
-      contentAlignment = Alignment.Center) {
 
-    }
+    AsyncImage(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(200.dp),
+      model = article.imageUrl,
+      contentDescription = null,
+      contentScale = FillWidth
+    )
 
     Spacer(modifier = Modifier.height(8.dp))
 
@@ -46,14 +48,5 @@ fun ArticleCard(article: Article, onNavigateToDetail: (String) -> Unit) {
     )
 
     Spacer(modifier = Modifier.height(8.dp))
-  }
-}
-
-@Preview
-@Composable
-fun HomeScreenPreview() {
-
-  ArticleCard(Article(title = "Sample Article", author = "Author", imageUrl = "")) {
-
   }
 }

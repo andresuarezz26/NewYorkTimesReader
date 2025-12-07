@@ -43,11 +43,15 @@ dependencies {
 
   // Presentation
   implementation(libs.androidx.navigation.compose)
+
+  // Compose
   implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
-  // Test rules and transitive dependencies:
   androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.10.0")
-// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
   debugImplementation("androidx.compose.ui:ui-test-manifest:1.10.0")
+
+  // Coil
+  implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+  implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
 
   // General
   implementation(libs.kotlinx.serialization.json)
