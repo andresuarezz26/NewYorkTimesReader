@@ -1,7 +1,6 @@
 package com.newyorktimesreader.data.di
 
 import com.newyorktimesreader.data.source.ApiService
-import com.newyorktimesreader.data.source.SearchApiUrl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,7 +41,7 @@ class NetworkModule {
     okHttpClient: OkHttpClient,
     converterFactory: Converter.Factory
   ): Retrofit = Retrofit.Builder()
-    .baseUrl(SearchApiUrl.BASE_URL)
+    .baseUrl(ApiService.SearchApiUrl.BASE_URL)
     .client(okHttpClient)
     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     .addConverterFactory(converterFactory)
