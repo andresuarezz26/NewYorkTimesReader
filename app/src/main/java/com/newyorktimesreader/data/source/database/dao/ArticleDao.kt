@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.newyorktimesreader.data.source.database.entity.ARTICLE_TABLE
 import com.newyorktimesreader.data.source.database.entity.ArticleEntity
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
 @Dao
@@ -21,5 +22,5 @@ interface ArticleDao {
   fun getAllArticles(): Single<List<ArticleEntity>>
 
   @Query("SELECT * FROM $ARTICLE_TABLE WHERE id = :id")
-  fun getArticleFromId(id: String): Single<ArticleEntity>
+  fun getArticleFromId(id: String): Maybe<ArticleEntity>
 }

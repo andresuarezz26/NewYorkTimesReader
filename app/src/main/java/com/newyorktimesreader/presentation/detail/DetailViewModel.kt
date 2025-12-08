@@ -1,5 +1,6 @@
 package com.newyorktimesreader.presentation.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
   private val getArticleDetailUseCase: GetArticleDetailUseCase,
-  @MainScheduler private val mainScheduler: Scheduler,
+  @param:MainScheduler private val mainScheduler: Scheduler,
   savedStateHandle: SavedStateHandle
   ): BaseViewModel(){
 
@@ -35,7 +36,7 @@ class DetailViewModel @Inject constructor(
         .observeOn(mainScheduler).subscribe({
           _articleDetail.value = it
         }, {
-
+          Log.e("DetailViewModel",it.message.toString())
         }))
   }
 

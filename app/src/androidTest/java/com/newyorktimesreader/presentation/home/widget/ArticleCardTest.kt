@@ -16,27 +16,25 @@ class ArticleCardTest {
 
   // Mock Article data
   private val testArticle = Article(
-    title = "The Global Economy Outlook",
-    author = "Dr. Jane Smith",
-    imageUrl = "test_url"
+    id = "nyt://article/067a379c-81e2-5465-bc6c-7411bbdee9b6",
+    title = "Want to Avoid Texts From the Office? This Ring Could Help.",
+    author = "By Tina Isaac-Goizé",
+    imageUrl = "https://static01.nyt.com/images/2025/08/28/multimedia/28sp-jewelry-color-inyt-digi-03-cmkl/28sp-jewelry-color-inyt-digi-03-cmkl-articleLarge.jpg",
+    imageDescription = "Katia de Lasteyrie, the founder of Spktrl, said the ring took two years to develop and was designed as “a tool of empowerment.”",
+    abstract = "The Spktrl Light ring uses technology to trigger coded light displays through the diamond on its surface.",
+    webUrl = "https://www.nytimes.com/2025/08/27/fashion/jewelry-technology-lab-grown-diamonds.html"
   )
 
   @Test
   fun articleCard_displaysTitleAndAuthor() {
-    // 2. Set the composable content on the rule
     composeTestRule.setContent {
-      // Use the improved ArticleCard implementation (if available)
-      // Otherwise, use your current ArticleCard
       ArticleCard(article = testArticle, onNavigateToDetail = {})
     }
 
-    // 3. Verify that the title text is displayed
     composeTestRule
       .onNodeWithText(testArticle.title)
       .assertExists()
 
-    // 4. Verify that the author text is displayed
-    // Note: If you used "By ${article.author}", match that string!
     composeTestRule
       .onNodeWithText(testArticle.author)
       .assertExists()
@@ -44,20 +42,17 @@ class ArticleCardTest {
 
   @Test
   fun articleCard_clickTriggersNavigationCallback() {
-    // 1. Mock the callback function using Mockito-Kotlin
     val mockOnNavigate: (String) -> Unit = mock()
 
     composeTestRule.setContent {
       ArticleCard(article = testArticle, onNavigateToDetail = mockOnNavigate)
     }
 
-    // 2. Find the card by the title (as the clickable element contains the text)
     composeTestRule
       .onNodeWithText(testArticle.title)
       .performClick()
 
-    // 3. Verify that the mock callback was called exactly once with the correct argument
-    verify(mockOnNavigate).invoke(testArticle.title)
+    verify(mockOnNavigate).invoke(testArticle.id)
   }
 
 }

@@ -12,8 +12,7 @@ import javax.inject.Inject
 class ArticlesRepositoryImpl @Inject constructor(
   private val apiService: DiscoverServiceApi,
   private val articleDao: ArticleDao
-) :
-  ArticlesRepository {
+) : ArticlesRepository {
 
   override fun getArticles(): Single<List<Article>> {
     return articleDao.getAllArticles()
@@ -24,6 +23,13 @@ class ArticlesRepositoryImpl @Inject constructor(
           fetchAndCacheArticles()
         }
       }
+  }
+
+
+  override fun getArticleDetail(articleId: String): Single<Article> {
+    return articleDao.getArticleFromId(articleId).map { entity ->
+      mapEntityToDomain(entity)
+    }.switchIfEmpty(Single.error(NoSuchElementException(articleId)))
   }
 
   private fun fetchAndCacheArticles(): Single<List<Article>> {
@@ -41,13 +47,6 @@ class ArticlesRepositoryImpl @Inject constructor(
 
         Single.just(articles)
       }
-  }
-
-
-  override fun getArticleDetail(articleId: String): Single<Article> {
-    return articleDao.getArticleFromId(articleId).map { entity ->
-      mapEntityToDomain(entity)
-    }
   }
 
   private fun mapResponseToDomain(articleResponse: ArticleResponse): Article {

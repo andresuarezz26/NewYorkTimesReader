@@ -42,13 +42,13 @@ class HomeViewModelTest {
   }
 
   @Test
-  fun whenGetArticlesSuccess_thenVerifyListOfArticles() {
+  fun `when get articles success then verify the list of articles correspons with the usecase returned data`() {
 
     assertEquals(homeViewModel.listOfArticles.value, result)
   }
 
   @Test
-  fun whenDispose_thenVerifyCompositeDisposableIsDisposed() {
+  fun `when dispose is invoked then verify composite disposable is disposed`() {
     homeViewModel.dispose()
 
     assertTrue(homeViewModel.compositeDisposable.isDisposed)

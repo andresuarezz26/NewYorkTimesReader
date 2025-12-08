@@ -22,7 +22,7 @@ fun ArticleCard(article: Article, onNavigateToDetail: (String) -> Unit) {
   Column(modifier = Modifier
     .padding(vertical = 8.dp)
     .fillMaxWidth()
-    .clickable { onNavigateToDetail(article.title) }
+    .clickable { onNavigateToDetail(article.id) }
   ) {
 
     Text(

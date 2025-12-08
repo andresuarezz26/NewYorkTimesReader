@@ -16,7 +16,7 @@ interface GetArticlesUseCase {
 
 
 class GetArticlesUseCaseImpl @Inject constructor(
-  @IoScheduler private val ioSchedulers: Scheduler,
+  @param:IoScheduler private val ioSchedulers: Scheduler,
   private val repository: ArticlesRepository,
 ): GetArticlesUseCase {
 

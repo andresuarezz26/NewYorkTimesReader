@@ -39,7 +39,7 @@ class DetailViewModelTest {
   }
 
   @Test
-  fun whenViewModelIsCreated_invokeArticleDetailUseCase() {
+  fun `when viewmodel is created, use case returns a valid article, then assert we get the same article`() {
     assertEquals(mockArticle, viewModel.articleDetail.value)
   }
 
