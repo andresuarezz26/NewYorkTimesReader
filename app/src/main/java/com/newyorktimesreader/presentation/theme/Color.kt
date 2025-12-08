@@ -1,4 +1,4 @@
-package com.newyorktimesreader.ui.theme
+package com.newyorktimesreader.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

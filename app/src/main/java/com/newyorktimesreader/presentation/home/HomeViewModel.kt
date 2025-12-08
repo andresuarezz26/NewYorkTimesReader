@@ -2,8 +2,7 @@ package com.newyorktimesreader.presentation.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.newyorktimesreader.di.MainScheduler
+import com.newyorktimesreader.domain.di.MainScheduler
 import com.newyorktimesreader.domain.GetArticlesUseCase
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.presentation.common.BaseViewModel
@@ -32,7 +31,9 @@ open class HomeViewModel @Inject constructor(
         .observeOn(mainScheduler)
         .subscribe({
           _listOfArticles.value = it
-        }, {})
+        }, {
+          it.printStackTrace()
+        })
     )
   }
 

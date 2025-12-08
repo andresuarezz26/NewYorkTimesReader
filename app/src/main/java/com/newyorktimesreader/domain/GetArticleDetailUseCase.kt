@@ -1,6 +1,6 @@
 package com.newyorktimesreader.domain
 
-import com.newyorktimesreader.di.IoScheduler
+import com.newyorktimesreader.domain.di.IoScheduler
 import com.newyorktimesreader.domain.model.Article
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single

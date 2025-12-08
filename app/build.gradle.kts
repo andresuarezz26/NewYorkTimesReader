@@ -5,6 +5,7 @@ plugins {
   alias(libs.plugins.kotlin.serialization)
   id("com.google.devtools.ksp")
   id("com.google.dagger.hilt.android")
+  id("kotlin-parcelize")
 }
 
 android {
@@ -71,6 +72,17 @@ dependencies {
   testImplementation("org.mockito:mockito-core:5.10.0")
   testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
   androidTestImplementation("org.mockito:mockito-android:5.10.0")
+
+  // Data
+  // Retrofit
+  implementation(libs.retrofit)
+  implementation(libs.retrofit.converter.gson)
+
+  // Retrofit adapter
+  implementation("com.squareup.retrofit2:adapter-rxjava3:3.0.0")
+
+  // Logging interceptor
+  implementation(libs.httpLoggingInterceptor)
 
 
   implementation(libs.androidx.core.ktx)

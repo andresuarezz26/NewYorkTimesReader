@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.newyorktimesreader.presentation.navigation.NavigationStack
-import com.newyorktimesreader.ui.theme.NewYorkTimesReaderTheme
+import com.newyorktimesreader.presentation.theme.NewYorkTimesReaderTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +22,6 @@ class MainActivity : ComponentActivity() {
     setContent {
 
       NewYorkTimesReaderTheme {
-        // A surface container using the 'background' color from the theme
         Surface(
           modifier = Modifier.fillMaxSize(),
           color = MaterialTheme.colorScheme.background

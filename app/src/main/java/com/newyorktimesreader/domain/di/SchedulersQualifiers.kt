@@ -1,4 +1,4 @@
-package com.newyorktimesreader.di
+package com.newyorktimesreader.domain.di
 
 import javax.inject.Qualifier
 

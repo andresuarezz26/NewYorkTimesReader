@@ -3,7 +3,7 @@ package com.newyorktimesreader.presentation.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import com.newyorktimesreader.di.MainScheduler
+import com.newyorktimesreader.domain.di.MainScheduler
 import com.newyorktimesreader.domain.GetArticleDetailUseCase
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.presentation.common.BaseViewModel
