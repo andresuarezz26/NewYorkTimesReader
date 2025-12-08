@@ -1,5 +1,7 @@
 package com.newyorktimesreader.di
 
+import com.newyorktimesreader.domain.GetArticleDetailUseCase
+import com.newyorktimesreader.domain.GetArticleDetailUseCaseImpl
 import com.newyorktimesreader.domain.GetArticlesUseCase
 import com.newyorktimesreader.domain.GetArticlesUseCaseImpl
 import dagger.Binds
@@ -15,4 +17,9 @@ abstract class UseCaseModule {
   abstract fun provideGetArticlesUseCase(
     useCase: GetArticlesUseCaseImpl
   ): GetArticlesUseCase
+
+  @Binds
+  abstract fun provideGetArticleDetailUseCase(
+    useCase: GetArticleDetailUseCaseImpl
+  ): GetArticleDetailUseCase
 }

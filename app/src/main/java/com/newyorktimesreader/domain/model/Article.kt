@@ -7,5 +7,6 @@ data class Article(
   val imageUrl: String,
   val imageDescription: String,
   val abstract: String,
-  val webUrl: String
+  val webUrl: String,
+  val fullArticleContent: String? = null
 )

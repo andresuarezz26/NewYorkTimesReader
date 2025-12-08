@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.newyorktimesreader.domain.model.Article
+import com.newyorktimesreader.presentation.common.widget.NYTTopBar
 import com.newyorktimesreader.presentation.home.widget.ArticleCard
 
 @Composable
@@ -31,23 +33,26 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreenContent(listOfArticles: List<Article>, onNavigateToDetail: (String) -> Unit) {
-  LazyColumn(
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(16.dp)
-  ) {
-    item {
-      BasicText(text = "Top Stories",
-        style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold))
-      Spacer(modifier = Modifier.height(16.dp))
+  Scaffold(
+    topBar = {
+      NYTTopBar()
     }
-
-    items(listOfArticles) { article ->
-      ArticleCard(article) {
-        onNavigateToDetail(it)
+  ) { innerPadding ->
+    LazyColumn(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(innerPadding)
+        .padding(horizontal = 16.dp)
+    ) {
+      items(listOfArticles) { article ->
+        ArticleCard(article) {
+          onNavigateToDetail(it)
+        }
       }
     }
+
   }
+
 }
 
 @Preview

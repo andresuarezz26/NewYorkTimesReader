@@ -21,8 +21,9 @@ fun NavigationStack() {
     }
     composable<NavigationScreen.Detail>
        {
-         val args = it.toRoute<NavigationScreen.Detail>()
-         DetailScreen(id = args.id)
+         DetailScreen {
+           navController.popBackStack()
+         }
     }
   }
 }
