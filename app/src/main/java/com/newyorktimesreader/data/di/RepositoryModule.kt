@@ -1,6 +1,6 @@
 package com.newyorktimesreader.data.di
 
-import com.newyorktimesreader.data.ArticlesRepositoryImpl
+import com.newyorktimesreader.data.repositories.ArticlesRepositoryImpl
 import com.newyorktimesreader.domain.repository.ArticlesRepository
 import dagger.Binds
 import dagger.Module

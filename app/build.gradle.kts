@@ -6,6 +6,7 @@ plugins {
   id("com.google.devtools.ksp")
   id("com.google.dagger.hilt.android")
   id("kotlin-parcelize")
+  id("androidx.room")
 }
 
 android {
@@ -20,6 +21,10 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  room {
+    schemaDirectory("$projectDir/schemas")
   }
 
   buildTypes {
@@ -38,6 +43,7 @@ android {
   buildFeatures {
     compose = true
   }
+
 }
 
 dependencies {
@@ -73,7 +79,8 @@ dependencies {
   testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
   androidTestImplementation("org.mockito:mockito-android:5.10.0")
 
-  // Data
+  // Data Layer
+
   // Retrofit
   implementation(libs.retrofit)
   implementation(libs.retrofit.converter.gson)
@@ -83,6 +90,21 @@ dependencies {
 
   // Logging interceptor
   implementation(libs.httpLoggingInterceptor)
+
+  // Room
+  val room_version = "2.8.4"
+
+  implementation("androidx.room:room-runtime:$room_version")
+
+  // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
+  // See Add the KSP plugin to your project
+  ksp("androidx.room:room-compiler:$room_version")
+
+  // optional - RxJava3 support for Room
+  implementation("androidx.room:room-rxjava3:${room_version}")
+
+  // optional - Test helpers
+  testImplementation("androidx.room:room-testing:${room_version}")
 
 
   implementation(libs.androidx.core.ktx)

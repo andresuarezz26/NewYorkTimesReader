@@ -1,6 +1,6 @@
 package com.newyorktimesreader.data.di
 
-import com.newyorktimesreader.data.source.ApiService
+import com.newyorktimesreader.data.source.remote.DiscoverServiceApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,7 +41,7 @@ class NetworkModule {
     okHttpClient: OkHttpClient,
     converterFactory: Converter.Factory
   ): Retrofit = Retrofit.Builder()
-    .baseUrl(ApiService.SearchApiUrl.BASE_URL)
+    .baseUrl("https://api.nytimes.com/svc/")
     .client(okHttpClient)
     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     .addConverterFactory(converterFactory)
@@ -49,5 +49,5 @@ class NetworkModule {
 
   @Provides
   @Singleton
-  fun providesApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+  fun providesApiService(retrofit: Retrofit): DiscoverServiceApi = retrofit.create(DiscoverServiceApi::class.java)
 }

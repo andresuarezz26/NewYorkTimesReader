@@ -1,13 +1,15 @@
 package com.newyorktimesreader.data
 
-import com.newyorktimesreader.data.source.ApiService
-import com.newyorktimesreader.data.source.ArticleListResponse
-import com.newyorktimesreader.data.source.ArticleResponse
-import com.newyorktimesreader.data.source.ByLineResponse
-import com.newyorktimesreader.data.source.DefaultMultimediaResponse
-import com.newyorktimesreader.data.source.DiscoverServiceResponse
-import com.newyorktimesreader.data.source.HeadLineResponse
-import com.newyorktimesreader.data.source.MultimediaResponse
+import com.newyorktimesreader.data.repositories.ArticlesRepositoryImpl
+import com.newyorktimesreader.data.source.database.dao.ArticleDao
+import com.newyorktimesreader.data.source.remote.DiscoverServiceApi
+import com.newyorktimesreader.data.source.remote.ArticleListResponse
+import com.newyorktimesreader.data.source.remote.ArticleResponse
+import com.newyorktimesreader.data.source.remote.ByLineResponse
+import com.newyorktimesreader.data.source.remote.DefaultMultimediaResponse
+import com.newyorktimesreader.data.source.remote.DiscoverServiceResponse
+import com.newyorktimesreader.data.source.remote.HeadLineResponse
+import com.newyorktimesreader.data.source.remote.MultimediaResponse
 import com.newyorktimesreader.domain.repository.ArticlesRepository
 import io.reactivex.rxjava3.core.Single
 import kotlin.test.assertEquals
@@ -23,7 +25,8 @@ import org.mockito.kotlin.whenever
 @RunWith(MockitoJUnitRunner::class)
 class ArticlesRepositoryImplTest {
 
-  private val apiService: ApiService = mock()
+  private val apiService: DiscoverServiceApi = mock()
+  private val articleDao: ArticleDao = mock()
   private lateinit var repository: ArticlesRepository
 
   private val mockArticleResponse = ArticleResponse(
@@ -49,11 +52,12 @@ class ArticlesRepositoryImplTest {
 
   @Before
   fun setUp() {
-    repository = ArticlesRepositoryImpl(apiService)
+    repository = ArticlesRepositoryImpl(apiService, articleDao)
   }
 
   @Test
-  fun whenGetListOfArticles_andArticlesIsSuccessfull_thenReturnListOfArticles() {
+  fun whenGetListOfArticles_NoLocalDataArticlesAndServiceCallSuccess_thenReturnListOfArticlesFromNetwork() {
+    whenever(articleDao.getAllArticles()).thenReturn(Single.just(emptyList()))
     whenever(apiService.fetchArticles(any(), any())).thenReturn(Single.just(mockSuccessResponse))
     val testObserver = repository.getArticles().test()
     testObserver.assertComplete()
@@ -74,11 +78,16 @@ class ArticlesRepositoryImplTest {
   }
 
   @Test
-  fun whenGetListOfArticles_andArticlesThrowsError_thenEmitError() {
+  fun whenGetAllArticles_EmptyLocalDataAndNetworkError_thenEmitError() {
+    whenever(articleDao.getAllArticles()).thenReturn(Single.just(emptyList())) // <--- Line 84
+
     val error = RuntimeException("Network Error")
-    whenever(apiService.fetchArticles(any(), any()))
+    whenever(apiService.fetchArticles())
       .thenReturn(Single.error(error))
+
     val testObserver = repository.getArticles().test()
+
+    // Assert that the error from the network is correctly propagated
     testObserver.assertError(error)
   }
 }

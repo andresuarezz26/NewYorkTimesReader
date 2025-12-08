@@ -1,15 +1,13 @@
-package com.newyorktimesreader.data.source
+package com.newyorktimesreader.data.source.remote
 
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-
-interface ApiService {
+interface DiscoverServiceApi {
 
   companion object SearchApiUrl {
 
-    const val BASE_URL = "https://api.nytimes.com/svc/"
     const val QUERY = "q"
     const val API_KEY = "api-key"
     const val GET_ARTICLES = "search/v2/articlesearch.json"
