@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 class CachePolicyImpl @Inject constructor() : CachePolicy {
 
-  override var cacheDurationMillis: Long = 60 * 1000L
+  override var cacheDurationMillis: Long = 5 * 1000L
 
   private val lastUpdateTime: MutableMap<String, Long> = mutableMapOf()
 

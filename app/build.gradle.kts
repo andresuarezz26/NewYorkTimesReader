@@ -48,81 +48,70 @@ android {
 
 dependencies {
 
-  // Presentation
-  implementation(libs.androidx.navigation.compose)
-
   // Compose
-  implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
-  androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.10.0")
-  debugImplementation("androidx.compose.ui:ui-test-manifest:1.10.0")
+  implementation(libs.androidx.navigation.compose)
+  implementation(libs.androidx.compose.runtime.livedata)
+  androidTestImplementation(libs.androidx.compose.ui.test.junit)
+  debugImplementation(libs.androidx.compose.ui.test.manifest)
+  implementation(libs.androidx.activity.compose)
+  implementation(platform(libs.androidx.compose.bom))
 
   // Coil
-  implementation("io.coil-kt.coil3:coil-compose:3.0.4")
-  implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
+  implementation(libs.coil.compose)
+  implementation(libs.coil.network)
 
-  // General
+  // Serialization
   implementation(libs.kotlinx.serialization.json)
 
   // Hilt
-  implementation("com.google.dagger:hilt-android:2.57.1")
-  ksp("com.google.dagger:hilt-android-compiler:2.57.1")
+  implementation(libs.dagger.hilt.android)
+  ksp(libs.dagger.hilt.android.compiler)
   implementation(libs.hilt.navigation.compose)
 
-
-  // RxKotlin
-  implementation("io.reactivex.rxjava3:rxjava:3.0.2")
-  implementation("io.reactivex.rxjava3:rxkotlin:3.0.0")
-  implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+  // RxJava
+  implementation(libs.rx.java)
+  implementation(libs.rx.kotlin)
+  implementation(libs.rx.android)
 
   // Mockito
-  testImplementation("org.mockito:mockito-core:5.10.0")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
-  androidTestImplementation("org.mockito:mockito-android:5.10.0")
+  testImplementation(libs.mockito.core)
+  testImplementation(libs.mockito.kotlin)
+  androidTestImplementation(libs.mockito.android)
 
-  // Data Layer
+  // Android ktx
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.lifecycle.runtime.ktx)
+
+  // Android UI
+  implementation(libs.androidx.ui)
+  implementation(libs.androidx.ui.graphics)
+  implementation(libs.androidx.ui.tooling.preview)
+  implementation(libs.androidx.material3)
 
   // Retrofit
   implementation(libs.retrofit)
   implementation(libs.retrofit.converter.gson)
-
-  // Retrofit adapter
-  implementation("com.squareup.retrofit2:adapter-rxjava3:3.0.0")
+  implementation(libs.retrofit.adapter.rxjava3)
 
   // Logging interceptor
   implementation(libs.httpLoggingInterceptor)
 
   // Room
-  val room_version = "2.8.4"
+  implementation(libs.room.runtime)
+  ksp(libs.room.compiler)
+  implementation(libs.room.rx.java3)
+  testImplementation(libs.room.testing)
 
-  implementation("androidx.room:room-runtime:$room_version")
-
-  // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
-  // See Add the KSP plugin to your project
-  ksp("androidx.room:room-compiler:$room_version")
-
-  // optional - RxJava3 support for Room
-  implementation("androidx.room:room-rxjava3:${room_version}")
-
-  // optional - Test helpers
-  testImplementation("androidx.room:room-testing:${room_version}")
-
-
-  implementation(libs.androidx.core.ktx)
-  implementation(libs.androidx.lifecycle.runtime.ktx)
-  implementation(libs.androidx.activity.compose)
-  implementation(platform(libs.androidx.compose.bom))
-  implementation(libs.androidx.ui)
-  implementation(libs.androidx.ui.graphics)
-  implementation(libs.androidx.ui.tooling.preview)
-  implementation(libs.androidx.material3)
+  // General Test
+  testImplementation(libs.androidx.core.testing)
+  testImplementation(kotlin("test"))
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
   androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.ui.test.junit4)
-  testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0")
-  testImplementation("androidx.arch.core:core-testing:2.2.0")
+
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
-  testImplementation(kotlin("test"))
+
 }

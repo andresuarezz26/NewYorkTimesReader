@@ -9,6 +9,7 @@ import com.newyorktimesreader.data.source.remote.service.DiscoverServiceApi.Sear
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.domain.repository.ArticlesRepository
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
