@@ -8,8 +8,8 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 /**
- * Representatin of the way this application get a list of articles. The logic of where
- * this data comes from is delegated to the Repository.
+ * Getting the articles in the most efficient way regarding to the rules stablished by the
+ * articles repository.
  */
 interface GetArticlesUseCase {
   operator fun invoke(): Single<List<Article>>

@@ -9,6 +9,9 @@ import com.newyorktimesreader.data.source.database.entity.ArticleEntity
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
+/**
+ * CRUD for articles entities
+ */
 @Dao
 interface ArticleDao {
 

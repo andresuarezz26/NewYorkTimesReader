@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
@@ -7,6 +9,14 @@ plugins {
   id("com.google.dagger.hilt.android")
   id("kotlin-parcelize")
   id("androidx.room")
+}
+
+val props = Properties()
+val propFile = rootProject.file("local.properties")
+
+if (propFile.exists()) {
+  // Load the file contents into the 'props' variable
+  propFile.inputStream().use { props.load(it) }
 }
 
 android {
@@ -21,6 +31,10 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    buildConfigField(
+      "String",
+      "NYT_API_KEY",
+      "\"${props.getProperty("NYT_API_KEY", "DEFAULT_FALLBACK_KEY")}\"")
   }
 
   room {
@@ -42,6 +56,7 @@ android {
   }
   buildFeatures {
     compose = true
+    buildConfig = true
   }
 
 }

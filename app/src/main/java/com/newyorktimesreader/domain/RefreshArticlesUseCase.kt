@@ -8,8 +8,7 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 /**
- * Representatin of the way this application get a list of articles. The logic of where
- * this data comes from is delegated to the Repository.
+ * Business logic for pulling the latest articles from the network and storing it in the database.
  */
 interface RefreshArticlesUseCase {
   operator fun invoke(): Single<List<Article>>

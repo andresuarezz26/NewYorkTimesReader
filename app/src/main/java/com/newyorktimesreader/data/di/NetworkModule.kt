@@ -1,5 +1,7 @@
 package com.newyorktimesreader.data.di
 
+import com.newyorktimesreader.BuildConfig
+import com.newyorktimesreader.data.source.remote.interceptors.ApiKeyInterceptor
 import com.newyorktimesreader.data.source.remote.service.DiscoverServiceApi
 import dagger.Module
 import dagger.Provides
@@ -12,14 +14,25 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
   @Provides
   @Singleton
-  fun provideOkHttpClient(): OkHttpClient {
+  fun provideApiKey(): String {
+    return BuildConfig.NYT_API_KEY
+  }
+
+  @Provides
+  @Singleton
+  fun provideApiKeyInterceptor(apiKey: String): ApiKeyInterceptor {
+    return ApiKeyInterceptor(apiKey)
+  }
+
+  @Provides
+  @Singleton
+  fun provideOkHttpClient(apiKeyInterceptor: ApiKeyInterceptor): OkHttpClient {
     val loggingInterceptor = HttpLoggingInterceptor()
       .setLevel(
         HttpLoggingInterceptor.Level.BODY
@@ -28,6 +41,7 @@ class NetworkModule {
     return OkHttpClient.Builder().apply {
       cache(null)
       addInterceptor(loggingInterceptor)
+      addInterceptor(apiKeyInterceptor)
     }.build()
   }
 

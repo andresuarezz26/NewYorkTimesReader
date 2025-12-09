@@ -7,6 +7,9 @@ import androidx.room.PrimaryKey
 const val ARTICLE_TABLE = "article"
 const val ARTICLE_ID = "id"
 
+/**
+ * Representation of an article in the local database
+ */
 @Entity(tableName = ARTICLE_TABLE)
 data class ArticleEntity(
   @PrimaryKey @ColumnInfo(name = ARTICLE_ID) val id: String,
