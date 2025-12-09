@@ -22,19 +22,14 @@ class ArticlesRepositoryImpl @Inject constructor(
 ) : ArticlesRepository {
 
   override fun getArticles(): Single<List<Article>> {
-    val isCacheValid = cachePolicy.isCacheValid(GET_ARTICLES)
-    return if (isCacheValid) {
-      articleDao.getAllArticles()
-        .flatMap { articlesFromDb ->
-          if (articlesFromDb.isNotEmpty()) {
-            Single.just(articlesFromDb.map { mapEntityToDomain(it) })
-          } else {
-            fetchAndCacheArticles()
-          }
+    return Single.fromCallable { cachePolicy.isCacheValid(GET_ARTICLES) }
+      .flatMap { isCacheValid ->
+        if (isCacheValid) {
+          getArticlesFromCache()
+        } else {
+          fetchAndCacheArticles()
         }
-    } else {
-      fetchAndCacheArticles()
-    }
+      }
   }
 
 
@@ -44,6 +39,16 @@ class ArticlesRepositoryImpl @Inject constructor(
     }.switchIfEmpty(Single.error(NoSuchElementException(articleId)))
   }
 
+  private fun getArticlesFromCache(): Single<List<Article>> {
+    return articleDao.getAllArticles().flatMap { articlesFromDb ->
+      if (articlesFromDb.isNotEmpty()) {
+        Single.just(articlesFromDb.map { mapEntityToDomain(it) }) // Assuming .toDomain() extension is used
+      } else {
+        fetchAndCacheArticles()
+      }
+    }
+  }
+
   private fun fetchAndCacheArticles(): Single<List<Article>> {
     return apiService.fetchArticles()
       .map { response ->
@@ -51,11 +56,10 @@ class ArticlesRepositoryImpl @Inject constructor(
       }
       .flatMap { articles ->
         if (articles.isNotEmpty()) {
-          val entities : List<ArticleEntity> = articles.map { mapDomainToEntity(it) }
+          val entities: List<ArticleEntity> = articles.map { mapDomainToEntity(it) }
           articleDao.clearAll()
           articleDao.insertAll(*entities.toTypedArray())
           cachePolicy.setCacheRefreshed(GET_ARTICLES)
-          articles
         }
 
         Single.just(articles)
