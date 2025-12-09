@@ -1,4 +1,4 @@
-package com.newyorktimesreader.data.source.remote
+package com.newyorktimesreader.data.source.remote.response
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

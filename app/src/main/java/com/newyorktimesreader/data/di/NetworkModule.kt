@@ -1,6 +1,6 @@
 package com.newyorktimesreader.data.di
 
-import com.newyorktimesreader.data.source.remote.DiscoverServiceApi
+import com.newyorktimesreader.data.source.remote.service.DiscoverServiceApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

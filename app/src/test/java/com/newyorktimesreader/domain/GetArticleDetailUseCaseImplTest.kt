@@ -35,4 +35,12 @@ class GetArticleDetailUseCaseImplTest {
     observer.assertNoErrors()
     observer.assertValue(article)
   }
+
+  @Test
+  fun `when use case is invoked and there are no articles then return error`() {
+    whenever(repository.getArticleDetail("1")).thenReturn(
+      Single.error(NoSuchElementException()))
+    val observer = useCase("1").test()
+    observer.assertError(NoSuchElementException::class.java)
+  }
 }
