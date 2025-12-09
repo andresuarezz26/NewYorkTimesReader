@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,28 +23,41 @@ fun HomeScreen(
   onNavigateToDetail: (String) -> Unit,
   viewModel: HomeViewModel = hiltViewModel()
 ) {
-  val listOfArticles = viewModel.listOfArticles.observeAsState(emptyList())
+  val listOfArticles by viewModel.listOfArticles.observeAsState(emptyList())
+  val isRefreshing by viewModel.isRefreshing.observeAsState(false)
 
-  HomeScreenContent(listOfArticles.value, onNavigateToDetail)
+  HomeScreenContent(listOfArticles, onNavigateToDetail, isRefreshing) {
+    viewModel.getArticles()
+  }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenContent(listOfArticles: List<Article>, onNavigateToDetail: (String) -> Unit) {
+fun HomeScreenContent(
+  listOfArticles: List<Article>,
+  onNavigateToDetail: (String) -> Unit,
+  isRefreshing: Boolean,
+  onRefresh: () -> Unit
+) {
   Scaffold(
     topBar = {
       NYTTopBar()
     }
-
   ) { innerPadding ->
-    LazyColumn(
-      modifier = Modifier
-        .fillMaxSize()
-        .padding(innerPadding)
-        .padding(horizontal = 16.dp)
+    PullToRefreshBox(
+      isRefreshing = isRefreshing,
+      onRefresh = onRefresh,
+      modifier = Modifier.fillMaxSize().padding(innerPadding)
     ) {
-      items(listOfArticles) { article ->
-        ArticleCard(article) {
-          onNavigateToDetail(it)
+      LazyColumn(
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(horizontal = 16.dp)
+      ) {
+        items(listOfArticles) { article ->
+          ArticleCard(article) {
+            onNavigateToDetail(it)
+          }
         }
       }
     }
@@ -62,6 +78,6 @@ fun HomeScreenPreview() {
         abstract = "The Spktrl Light ring uses technology to trigger coded light displays through the diamond on its surface.",
         webUrl = "https://www.nytimes.com/2025/08/27/fashion/jewelry-technology-lab-grown-diamonds.html"
       )
-    ), onNavigateToDetail = {})
+    ), onNavigateToDetail = {}, false, onRefresh = {})
 }
 

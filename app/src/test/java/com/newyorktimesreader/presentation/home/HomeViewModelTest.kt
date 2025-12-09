@@ -43,8 +43,17 @@ class HomeViewModelTest {
 
   @Test
   fun `when get articles success then verify the list of articles correspons with the usecase returned data`() {
+    assertEquals(result, homeViewModel.listOfArticles.value)
+    assertEquals(false, homeViewModel.isRefreshing.value)
+  }
 
-    assertEquals(homeViewModel.listOfArticles.value, result)
+  @Test
+  fun `when getArticles to refresh the data is invoked then verify the list of articles correspons with the usecase returned data`() {
+    val result = getMockListWith2Articles()
+    whenever(getArticlesUseCase.invoke()).thenReturn(Single.just(result))
+    homeViewModel.getArticles()
+    assertEquals(result, homeViewModel.listOfArticles.value)
+    assertEquals(false, homeViewModel.isRefreshing.value)
   }
 
   @Test
@@ -57,5 +66,9 @@ class HomeViewModelTest {
 
   private fun getMockList() : List<Article> {
     return listOf(mock(Article::class.java))
+  }
+
+  private fun getMockListWith2Articles() : List<Article> {
+    return listOf(mock(Article::class.java), mock(Article::class.java))
   }
 }

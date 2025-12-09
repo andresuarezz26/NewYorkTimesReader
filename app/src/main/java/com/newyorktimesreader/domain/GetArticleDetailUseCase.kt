@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 /**
- * Use case used to get a single article from an article id with full details.
+ * Represents the way this application gets a single article and all their information
  */
 interface GetArticleDetailUseCase {
   operator fun invoke(articleId: String): Single<Article>

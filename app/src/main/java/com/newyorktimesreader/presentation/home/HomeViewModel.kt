@@ -1,5 +1,6 @@
 package com.newyorktimesreader.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.newyorktimesreader.domain.di.MainScheduler
@@ -27,18 +28,23 @@ open class HomeViewModel @Inject constructor(
   private val _listOfArticles = MutableLiveData<List<Article>>()
   val listOfArticles: LiveData<List<Article>> = _listOfArticles
 
+  private val _isRefreshing = MutableLiveData(false)
+  val isRefreshing: LiveData<Boolean> = _isRefreshing
+
   init {
     getArticles()
   }
 
-  private fun getArticles() {
+  fun getArticles() {
+    _isRefreshing.value = true
     compositeDisposable.add(
       getArticlesUseCase.invoke()
         .observeOn(mainScheduler)
+        .doFinally { _isRefreshing.postValue(false) }
         .subscribe({
           _listOfArticles.value = it
         }, {
-          it.printStackTrace()
+          Log.d("HomeVM", "Data Error: ${it.message}")
         })
     )
   }

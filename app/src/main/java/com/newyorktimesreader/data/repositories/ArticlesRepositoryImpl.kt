@@ -27,7 +27,7 @@ class ArticlesRepositoryImpl @Inject constructor(
         if (isCacheValid) {
           getArticlesFromCache()
         } else {
-          fetchAndCacheArticles()
+          refreshArticles()
         }
       }
   }
@@ -44,12 +44,12 @@ class ArticlesRepositoryImpl @Inject constructor(
       if (articlesFromDb.isNotEmpty()) {
         Single.just(articlesFromDb.map { mapEntityToDomain(it) }) // Assuming .toDomain() extension is used
       } else {
-        fetchAndCacheArticles()
+        refreshArticles()
       }
     }
   }
 
-  private fun fetchAndCacheArticles(): Single<List<Article>> {
+  private fun refreshArticles(): Single<List<Article>> {
     return apiService.fetchArticles()
       .map { response ->
         response.response.docs?.map { mapResponseToDomain(it) } ?: listOf()
