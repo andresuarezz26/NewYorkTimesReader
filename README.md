@@ -9,6 +9,10 @@ An Android application that displays the latest technology articles from The New
 - **Pull to Refresh**: Swipe down to force refresh articles from the network
 - **Article Detail**: View full article details including title, abstract, author, and featured image
 
+https://github.com/user-attachments/assets/625bf7cb-7cc0-42e7-886b-58c5b92d4f70
+
+
+
 ## Architecture
 
 This app follows a **3-layered Clean Architecture** pattern. The main logic is being tested using unit tests and TDD.
