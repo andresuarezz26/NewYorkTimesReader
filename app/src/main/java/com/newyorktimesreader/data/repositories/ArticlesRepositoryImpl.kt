@@ -9,7 +9,6 @@ import com.newyorktimesreader.data.source.remote.service.DiscoverServiceApi.Sear
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.domain.repository.ArticlesRepository
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -50,7 +49,7 @@ class ArticlesRepositoryImpl @Inject constructor(
     }
   }
 
-  private fun refreshArticles(): Single<List<Article>> {
+  override fun refreshArticles(): Single<List<Article>> {
     return apiService.fetchArticles()
       .map { response ->
         response.response.docs?.map { mapResponseToDomain(it) } ?: listOf()

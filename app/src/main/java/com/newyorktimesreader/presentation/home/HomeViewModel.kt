@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.newyorktimesreader.domain.di.MainScheduler
 import com.newyorktimesreader.domain.GetArticlesUseCase
+import com.newyorktimesreader.domain.RefreshArticlesUseCase
 import com.newyorktimesreader.domain.di.IoScheduler
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.presentation.common.BaseViewModel
@@ -22,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 open class HomeViewModel @Inject constructor(
   private val getArticlesUseCase: GetArticlesUseCase,
+  private val refreshArticlesUseCase: RefreshArticlesUseCase,
   @param:MainScheduler private val mainScheduler: Scheduler
 ) :
   BaseViewModel() {
@@ -37,9 +39,23 @@ open class HomeViewModel @Inject constructor(
     getArticles()
   }
 
-  fun getArticles() {
+  private fun getArticles() {
     compositeDisposable.add(
       getArticlesUseCase.invoke()
+        .observeOn(mainScheduler)
+        .doOnSubscribe { _isRefreshing.value = true}
+        .doFinally { _isRefreshing.value = false }
+        .subscribe({
+          _listOfArticles.value = it
+        }, {
+          Log.d("HomeVM", "Data Error: ${it.message}")
+        })
+    )
+  }
+
+  fun refreshArticles(){
+    compositeDisposable.add(
+      refreshArticlesUseCase.invoke()
         .observeOn(mainScheduler)
         .doOnSubscribe { _isRefreshing.value = true}
         .doFinally { _isRefreshing.value = false }

@@ -31,7 +31,7 @@ fun HomeScreen(
   val isRefreshing by viewModel.isRefreshing.observeAsState(false)
 
   HomeScreenContent(listOfArticles, onNavigateToDetail, isRefreshing) {
-    viewModel.getArticles()
+    viewModel.refreshArticles()
   }
 }
 

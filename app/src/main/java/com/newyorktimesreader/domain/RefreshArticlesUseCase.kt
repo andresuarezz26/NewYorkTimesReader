@@ -11,16 +11,16 @@ import javax.inject.Inject
  * Representatin of the way this application get a list of articles. The logic of where
  * this data comes from is delegated to the Repository.
  */
-interface GetArticlesUseCase {
+interface RefreshArticlesUseCase {
   operator fun invoke(): Single<List<Article>>
 }
 
-class GetArticlesUseCaseImpl @Inject constructor(
+class RefreshArticlesUseCaseImpl @Inject constructor(
   @param:IoScheduler private val ioSchedulers: Scheduler,
   private val repository: ArticlesRepository,
-): GetArticlesUseCase {
+): RefreshArticlesUseCase {
 
   override operator fun invoke(): Single<List<Article>> {
-    return repository.getArticles().subscribeOn(ioSchedulers)
+    return repository.refreshArticles().subscribeOn(ioSchedulers)
   }
 }

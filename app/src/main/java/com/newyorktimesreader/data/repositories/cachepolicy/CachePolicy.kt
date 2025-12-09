@@ -1,11 +1,8 @@
 package com.newyorktimesreader.data.repositories.cachepolicy
 
 /**
- * This is a in-memory cache policy to store the last time a service was updated
+ * This is cache policy stored in shared preferences  policy to store the last time a service was updated
  * and check if the cache is still valid.
- * As the information is saved in memory and not on disk, everytime the app is closed the
- * cache will be restarted. For more strict cache policy, use shared preference or database
- * to store the information.
  */
 interface CachePolicy {
   // Cache duration in milliseconds (e.g., 60 * 1000 for 1 minute)

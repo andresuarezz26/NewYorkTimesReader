@@ -4,6 +4,8 @@ import com.newyorktimesreader.domain.GetArticleDetailUseCase
 import com.newyorktimesreader.domain.GetArticleDetailUseCaseImpl
 import com.newyorktimesreader.domain.GetArticlesUseCase
 import com.newyorktimesreader.domain.GetArticlesUseCaseImpl
+import com.newyorktimesreader.domain.RefreshArticlesUseCase
+import com.newyorktimesreader.domain.RefreshArticlesUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,4 +24,9 @@ abstract class UseCaseModule {
   abstract fun provideGetArticleDetailUseCase(
     useCase: GetArticleDetailUseCaseImpl
   ): GetArticleDetailUseCase
+
+  @Binds
+  abstract fun provideRefreshArticlesUseCase(
+    useCase: RefreshArticlesUseCaseImpl
+  ): RefreshArticlesUseCase
 }

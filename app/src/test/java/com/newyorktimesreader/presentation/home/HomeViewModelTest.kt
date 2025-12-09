@@ -2,6 +2,7 @@ package com.newyorktimesreader.presentation.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.newyorktimesreader.domain.GetArticlesUseCase
+import com.newyorktimesreader.domain.RefreshArticlesUseCase
 import com.newyorktimesreader.domain.model.Article
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.internal.schedulers.TrampolineScheduler
@@ -25,6 +26,7 @@ class HomeViewModelTest {
   public var rule: TestRule = InstantTaskExecutorRule()
 
   val getArticlesUseCase: GetArticlesUseCase = mock()
+  val refreshArticlesUseCase: RefreshArticlesUseCase = mock()
 
   private lateinit var homeViewModel : HomeViewModel
 
@@ -38,7 +40,7 @@ class HomeViewModelTest {
       .thenReturn(Single.just(result))
     val trampolineScheduler = TrampolineScheduler.instance()
 
-    homeViewModel = HomeViewModel(getArticlesUseCase, trampolineScheduler)
+    homeViewModel = HomeViewModel(getArticlesUseCase, refreshArticlesUseCase,trampolineScheduler)
   }
 
   @Test
@@ -48,10 +50,10 @@ class HomeViewModelTest {
   }
 
   @Test
-  fun `when getArticles to refresh the data is invoked then verify the list of articles correspons with the usecase returned data`() {
+  fun `when refresh the data is invoked then verify the list of articles correspons with the usecase returned data`() {
     val result = getMockListWith2Articles()
-    whenever(getArticlesUseCase.invoke()).thenReturn(Single.just(result))
-    homeViewModel.getArticles()
+    whenever(refreshArticlesUseCase.invoke()).thenReturn(Single.just(result))
+    homeViewModel.refreshArticles()
     assertEquals(result, homeViewModel.listOfArticles.value)
     assertEquals(false, homeViewModel.isRefreshing.value)
   }

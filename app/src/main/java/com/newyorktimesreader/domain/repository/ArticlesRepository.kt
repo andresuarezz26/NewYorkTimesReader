@@ -10,7 +10,20 @@ import io.reactivex.rxjava3.core.Single
  */
 interface ArticlesRepository {
 
+  /**
+   * Get articles following the internal business rules of the repository
+   */
   fun getArticles(): Single<List<Article>>
 
+  /**
+   * Get a detail of an articles
+   */
   fun getArticleDetail(articleId: String): Single<Article>
+
+  /**
+   * Get the articles from the network and update the database
+   */
+  fun refreshArticles(): Single<List<Article>>
+
+
 }
