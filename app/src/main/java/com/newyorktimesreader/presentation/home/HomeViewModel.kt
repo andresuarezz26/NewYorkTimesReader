@@ -11,10 +11,16 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
+/**
+ * ViewModel for the Home Screen.
+ *
+ * This viewModel interacts with domain layer to get the information and pass it via
+ * mutable live data to the view.
+ */
 @HiltViewModel
 open class HomeViewModel @Inject constructor(
   private val getArticlesUseCase: GetArticlesUseCase,
-  @MainScheduler private val mainScheduler: Scheduler) :
+  @param:MainScheduler private val mainScheduler: Scheduler) :
   BaseViewModel() {
 
   internal val compositeDisposable = CompositeDisposable()

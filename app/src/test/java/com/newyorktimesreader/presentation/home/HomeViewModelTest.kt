@@ -56,14 +56,6 @@ class HomeViewModelTest {
 
 
   private fun getMockList() : List<Article> {
-    return listOf(Article(
-      id = "nyt://article/067a379c-81e2-5465-bc6c-7411bbdee9b6",
-      title = "Want to Avoid Texts From the Office? This Ring Could Help.",
-      author = "By Tina Isaac-Goizé",
-      imageUrl = "https://static01.nyt.com/images/2025/08/28/multimedia/28sp-jewelry-color-inyt-digi-03-cmkl/28sp-jewelry-color-inyt-digi-03-cmkl-articleLarge.jpg",
-      imageDescription = "Katia de Lasteyrie, the founder of Spktrl, said the ring took two years to develop and was designed as “a tool of empowerment.”",
-      abstract = "The Spktrl Light ring uses technology to trigger coded light displays through the diamond on its surface.",
-      webUrl = "https://www.nytimes.com/2025/08/27/fashion/jewelry-technology-lab-grown-diamonds.html"
-    ))
+    return listOf(mock(Article::class.java))
   }
 }
