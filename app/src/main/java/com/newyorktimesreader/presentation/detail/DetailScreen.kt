@@ -13,7 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -34,7 +34,7 @@ fun DetailScreen(
   onBack: () -> Unit
 ) {
 
-  val articleDetail = viewModel.articleDetail.observeAsState(null)
+  val articleDetail = viewModel.articleDetail.collectAsState(null)
   DetailScreenContent(articleDetail.value) {
     onBack()
   }

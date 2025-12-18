@@ -1,8 +1,6 @@
 package com.newyorktimesreader.presentation.detail
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.newyorktimesreader.domain.di.MainScheduler
 import com.newyorktimesreader.domain.GetArticleDetailUseCase
@@ -12,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
@@ -23,8 +23,8 @@ class DetailViewModel @Inject constructor(
   private val articleId: String = checkNotNull(savedStateHandle["id"])
   private var compositeDisposable = CompositeDisposable()
 
-  private val _articleDetail = MutableLiveData<Article>()
-  val articleDetail : LiveData<Article> = _articleDetail
+  private val _articleDetail = MutableStateFlow<Article?>(null)
+  val articleDetail : StateFlow<Article?> = _articleDetail
 
   init {
     getArticleDetail()

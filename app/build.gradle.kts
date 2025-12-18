@@ -88,6 +88,9 @@ dependencies {
   implementation(libs.rx.kotlin)
   implementation(libs.rx.android)
 
+  // Coroutines
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
   // Mockito
   testImplementation(libs.mockito.core)
   testImplementation(libs.mockito.kotlin)

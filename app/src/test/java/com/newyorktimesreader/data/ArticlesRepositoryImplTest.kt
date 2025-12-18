@@ -76,7 +76,7 @@ class ArticlesRepositoryImplTest {
   fun `when there is no local data and the service call succeeds, then return the service data`() {
     whenever(cachePolicy.isCacheValid(GET_ARTICLES)).thenReturn(true)
     whenever(articleDao.getAllArticles()).thenReturn(Single.just(emptyList()))
-    whenever(apiService.fetchArticles(any(), any())).thenReturn(Single.just(mockSuccessResponse))
+    whenever(apiService.fetchArticles(any())).thenReturn(Single.just(mockSuccessResponse))
     val testObserver = repository.getArticles().test()
     testObserver.assertComplete()
     testObserver.assertNoErrors()

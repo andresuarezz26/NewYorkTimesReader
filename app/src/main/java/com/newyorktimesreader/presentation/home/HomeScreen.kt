@@ -11,8 +11,8 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,8 +27,8 @@ fun HomeScreen(
   onNavigateToDetail: (String) -> Unit,
   viewModel: HomeViewModel = hiltViewModel()
 ) {
-  val listOfArticles by viewModel.listOfArticles.observeAsState(emptyList())
-  val isRefreshing by viewModel.isRefreshing.observeAsState(false)
+  val listOfArticles by viewModel.listOfArticles.collectAsState(emptyList())
+  val isRefreshing by viewModel.isRefreshing.collectAsState(false)
 
   HomeScreenContent(listOfArticles, onNavigateToDetail, isRefreshing) {
     viewModel.refreshArticles()
