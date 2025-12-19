@@ -1,6 +1,7 @@
 package com.newyorktimesreader.presentation.home
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.newyorktimesreader.domain.GetArticlesUseCase
 import com.newyorktimesreader.domain.RefreshArticlesUseCase
 import com.newyorktimesreader.domain.di.MainScheduler
@@ -12,6 +13,8 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the Home Screen.
@@ -39,31 +42,30 @@ open class HomeViewModel @Inject constructor(
   }
 
   private fun getArticles() {
-    compositeDisposable.add(
+    _isRefreshing.value = true
+    viewModelScope.launch {
       getArticlesUseCase.invoke()
-        .observeOn(mainScheduler)
-        .doOnSubscribe { _isRefreshing.value = true}
-        .doFinally { _isRefreshing.value = false }
-        .subscribe({
+        .catch {
+          Log.e("DetailViewModel", "Error fetching article detail: ${it.message}")
+        }
+        .collect {
           _listOfArticles.value = it
-        }, {
-          Log.d("HomeVM", "Data Error: ${it.message}")
-        })
-    )
+          _isRefreshing.value = false
+        }
+    }
   }
 
-  fun refreshArticles(){
-    compositeDisposable.add(
+  fun refreshArticles() {
+    viewModelScope.launch {
       refreshArticlesUseCase.invoke()
-        .observeOn(mainScheduler)
-        .doOnSubscribe { _isRefreshing.value = true}
-        .doFinally { _isRefreshing.value = false }
-        .subscribe({
+        .catch {
+          Log.e("DetailViewModel", "Error fetching article detail: ${it.message}")
+        }
+        .collect {
           _listOfArticles.value = it
-        }, {
-          Log.d("HomeVM", "Data Error: ${it.message}")
-        })
-    )
+          _isRefreshing.value = false
+        }
+    }
   }
 
   override fun dispose() {

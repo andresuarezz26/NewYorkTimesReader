@@ -2,6 +2,7 @@ package com.newyorktimesreader.domain.repository
 
 import com.newyorktimesreader.domain.model.Article
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
 
 /**
  * This interface represents the implementation of a repository pattern, this is an abstraction
@@ -13,17 +14,17 @@ interface ArticlesRepository {
   /**
    * Get articles following the internal business rules of the repository
    */
-  fun getArticles(): Single<List<Article>>
+  fun getArticles(): Flow<List<Article>>
 
   /**
    * Get a detail of an articles
    */
-  fun getArticleDetail(articleId: String): Single<Article>
+  fun getArticleDetail(articleId: String): Flow<Article>
 
   /**
    * Get the articles from the network and update the database
    */
-  fun refreshArticles(): Single<List<Article>>
+  fun refreshArticles(): Flow<List<Article>>
 
 
 }

@@ -8,6 +8,7 @@ import com.newyorktimesreader.data.source.database.entity.ARTICLE_TABLE
 import com.newyorktimesreader.data.source.database.entity.ArticleEntity
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
 
 /**
  * CRUD for articles entities
@@ -16,14 +17,14 @@ import io.reactivex.rxjava3.core.Single
 interface ArticleDao {
 
   @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
-  fun insertAll(vararg entity: ArticleEntity)
+  suspend fun insertAll(vararg entity: ArticleEntity)
 
   @Query("DELETE FROM $ARTICLE_TABLE")
-  fun clearAll()
+  suspend fun clearAll()
 
   @Query("SELECT * FROM $ARTICLE_TABLE")
-  fun getAllArticles(): Single<List<ArticleEntity>>
+  suspend fun getAllArticles(): List<ArticleEntity>
 
   @Query("SELECT * FROM $ARTICLE_TABLE WHERE id = :id")
-  fun getArticleFromId(id: String): Maybe<ArticleEntity>
+  suspend fun getArticleFromId(id: String): ArticleEntity?
 }

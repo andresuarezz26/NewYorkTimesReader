@@ -8,8 +8,19 @@ import com.newyorktimesreader.data.source.remote.service.DiscoverServiceApi
 import com.newyorktimesreader.data.source.remote.service.DiscoverServiceApi.SearchApiUrl.GET_ARTICLES
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.domain.repository.ArticlesRepository
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
 /**
  * Repository pattern that check first if current cached data is valid, if is valid get the data
@@ -21,48 +32,51 @@ class ArticlesRepositoryImpl @Inject constructor(
   private val cachePolicy: CachePolicy
 ) : ArticlesRepository {
 
-  override fun getArticles(): Single<List<Article>> {
-    return Single.fromCallable { cachePolicy.isCacheValid(GET_ARTICLES) }
-      .flatMap { isCacheValid ->
+  @OptIn(ExperimentalCoroutinesApi::class)
+  override fun getArticles(): Flow<List<Article>> {
+    return flowOf(cachePolicy.isCacheValid(GET_ARTICLES))
+      .flatMapConcat { isCacheValid ->
         if (isCacheValid) {
           getArticlesFromCache()
         } else {
           refreshArticles()
         }
-      }
+      }.flowOn(Dispatchers.IO)
   }
 
 
-  override fun getArticleDetail(articleId: String): Single<Article> {
-    return articleDao.getArticleFromId(articleId).map { entity ->
-      mapEntityToDomain(entity)
-    }.switchIfEmpty(Single.error(NoSuchElementException(articleId)))
-  }
-
-  private fun getArticlesFromCache(): Single<List<Article>> {
-    return articleDao.getAllArticles().flatMap { articlesFromDb ->
-      if (articlesFromDb.isNotEmpty()) {
-        Single.just(articlesFromDb.map { mapEntityToDomain(it) }) // Assuming .toDomain() extension is used
-      } else {
-        refreshArticles()
-      }
+  override fun getArticleDetail(articleId: String): Flow<Article> {
+    return flow { emit(articleDao.getArticleFromId(articleId)) }.map { entity ->
+      entity?.let { mapEntityToDomain(it) } ?:
+      throw NoSuchElementException(articleId)
     }
   }
 
-  override fun refreshArticles(): Single<List<Article>> {
-    return apiService.fetchArticles()
+  @OptIn(ExperimentalCoroutinesApi::class)
+  private fun getArticlesFromCache(): Flow<List<Article>> {
+    return flow { emit(articleDao.getAllArticles()) }
+      .flatMapConcat { articlesFromDb ->
+        if (articlesFromDb.isNotEmpty()) {
+          flowOf(articlesFromDb.map { mapEntityToDomain(it) })
+        } else {
+          refreshArticles()
+        }
+      }.distinctUntilChanged()
+  }
+
+
+  override fun refreshArticles(): Flow<List<Article>> {
+    return flow { emit(apiService.fetchArticles()) }
       .map { response ->
         response.response.docs?.map { mapResponseToDomain(it) } ?: listOf()
       }
-      .flatMap { articles ->
+      .onEach { articles ->
         if (articles.isNotEmpty()) {
           val entities: List<ArticleEntity> = articles.map { mapDomainToEntity(it) }
           articleDao.clearAll()
           articleDao.insertAll(*entities.toTypedArray())
           cachePolicy.setCacheRefreshed(GET_ARTICLES)
         }
-
-        Single.just(articles)
       }
   }
 

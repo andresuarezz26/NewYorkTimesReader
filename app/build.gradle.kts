@@ -65,7 +65,6 @@ dependencies {
 
   // Compose
   implementation(libs.androidx.navigation.compose)
-  implementation(libs.androidx.compose.runtime.livedata)
   androidTestImplementation(libs.androidx.compose.ui.test.junit)
   debugImplementation(libs.androidx.compose.ui.test.manifest)
   implementation(libs.androidx.activity.compose)
@@ -109,7 +108,6 @@ dependencies {
   // Retrofit
   implementation(libs.retrofit)
   implementation(libs.retrofit.converter.gson)
-  implementation(libs.retrofit.adapter.rxjava3)
 
   // Logging interceptor
   implementation(libs.httpLoggingInterceptor)

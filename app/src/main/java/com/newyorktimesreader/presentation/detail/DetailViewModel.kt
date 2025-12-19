@@ -2,6 +2,7 @@ package com.newyorktimesreader.presentation.detail
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.newyorktimesreader.domain.di.MainScheduler
 import com.newyorktimesreader.domain.GetArticleDetailUseCase
 import com.newyorktimesreader.domain.model.Article
@@ -12,6 +13,8 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
@@ -31,13 +34,15 @@ class DetailViewModel @Inject constructor(
   }
 
   private fun getArticleDetail() {
-    compositeDisposable.add(
+    viewModelScope.launch {
       getArticleDetailUseCase.invoke(articleId)
-        .observeOn(mainScheduler).subscribe({
-          _articleDetail.value = it
-        }, {
-          Log.e("DetailViewModel",it.message.toString())
-        }))
+        .catch{
+          Log.e("DetailViewModel", "Error fetching article detail: ${it.message}")
+        }
+        .collect {
+        _articleDetail.value = it
+      }
+    }
   }
 
   override fun dispose() {
