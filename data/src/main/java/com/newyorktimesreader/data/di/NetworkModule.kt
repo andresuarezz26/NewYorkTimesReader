@@ -1,6 +1,6 @@
 package com.newyorktimesreader.data.di
 
-import com.newyorktimesreader.BuildConfig
+import com.newyorktimesreader.data.BuildConfig
 import com.newyorktimesreader.data.source.remote.interceptors.ApiKeyInterceptor
 import com.newyorktimesreader.data.source.remote.service.DiscoverServiceApi
 import dagger.Module

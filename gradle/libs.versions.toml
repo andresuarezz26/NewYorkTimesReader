@@ -20,6 +20,8 @@ mockitoCoreVersion = "5.10.0"
 roomVersion = "2.8.4"
 mockitoKotlinKotlinVersion ="6.1.0"
 androidxCoreTestingVersion ="2.2.0"
+appcompat = "1.7.1"
+material = "1.13.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -63,10 +65,13 @@ room-compiler= {group = "androidx.room", name = "room-compiler", version.ref = "
 room-testing = {group = "androidx.room", name = "room-testing", version.ref = "roomVersion"}
 # Arch components core testing
 androidx-core-testing = {group = "androidx.arch.core", name = "core-testing", version.ref = "androidxCoreTestingVersion"}
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = {id = "org.jetbrains.kotlin.plugin.serialization" , version.ref = "kotlin"}
+android-library = { id = "com.android.library", version.ref = "agp" }
 

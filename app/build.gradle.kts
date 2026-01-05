@@ -11,14 +11,6 @@ plugins {
   id("androidx.room")
 }
 
-val props = Properties()
-val propFile = rootProject.file("local.properties")
-
-if (propFile.exists()) {
-  // Load the file contents into the 'props' variable
-  propFile.inputStream().use { props.load(it) }
-}
-
 android {
   namespace = "com.newyorktimesreader"
   compileSdk = 36
@@ -31,10 +23,6 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    buildConfigField(
-      "String",
-      "NYT_API_KEY",
-      "\"${props.getProperty("NYT_API_KEY", "DEFAULT_FALLBACK_KEY")}\"")
   }
 
   room {
@@ -62,6 +50,9 @@ android {
 }
 
 dependencies {
+
+  implementation(project(":domain"))
+  implementation(project(":data"))
 
   // Compose
   implementation(libs.androidx.navigation.compose)
@@ -100,25 +91,13 @@ dependencies {
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
 
-  // Retrofit
-  implementation(libs.retrofit)
-  implementation(libs.retrofit.converter.gson)
-
-  // Logging interceptor
-  implementation(libs.httpLoggingInterceptor)
-
-  // Room
-  implementation(libs.room.runtime)
-  ksp(libs.room.compiler)
-  testImplementation(libs.room.testing)
-
   // General Test
+  androidTestImplementation(platform(libs.androidx.compose.bom))
   testImplementation(libs.androidx.core.testing)
   testImplementation(kotlin("test"))
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
-  androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.ui.test.junit4)
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 
