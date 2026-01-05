@@ -82,11 +82,6 @@ dependencies {
   ksp(libs.dagger.hilt.android.compiler)
   implementation(libs.hilt.navigation.compose)
 
-  // RxJava
-  implementation(libs.rx.java)
-  implementation(libs.rx.kotlin)
-  implementation(libs.rx.android)
-
   // Coroutines
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
@@ -115,7 +110,6 @@ dependencies {
   // Room
   implementation(libs.room.runtime)
   ksp(libs.room.compiler)
-  implementation(libs.room.rx.java3)
   testImplementation(libs.room.testing)
 
   // General Test
@@ -126,6 +120,7 @@ dependencies {
   androidTestImplementation(libs.androidx.espresso.core)
   androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.ui.test.junit4)
+  testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)

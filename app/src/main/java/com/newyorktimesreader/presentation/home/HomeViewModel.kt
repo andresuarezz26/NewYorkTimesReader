@@ -8,9 +8,8 @@ import com.newyorktimesreader.domain.di.MainScheduler
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -26,11 +25,10 @@ import kotlinx.coroutines.launch
 open class HomeViewModel @Inject constructor(
   private val getArticlesUseCase: GetArticlesUseCase,
   private val refreshArticlesUseCase: RefreshArticlesUseCase,
-  @param:MainScheduler private val mainScheduler: Scheduler
+  @param:MainScheduler private val mainDispatcher: CoroutineDispatcher
 ) :
   BaseViewModel() {
 
-  internal val compositeDisposable = CompositeDisposable()
   private val _listOfArticles = MutableStateFlow<List<Article>>(listOf())
   val listOfArticles: StateFlow<List<Article>> = _listOfArticles
 
@@ -43,7 +41,7 @@ open class HomeViewModel @Inject constructor(
 
   private fun getArticles() {
     _isRefreshing.value = true
-    viewModelScope.launch {
+    viewModelScope.launch(mainDispatcher) {
       getArticlesUseCase.invoke()
         .catch {
           Log.e("DetailViewModel", "Error fetching article detail: ${it.message}")
@@ -56,7 +54,7 @@ open class HomeViewModel @Inject constructor(
   }
 
   fun refreshArticles() {
-    viewModelScope.launch {
+    viewModelScope.launch(mainDispatcher) {
       refreshArticlesUseCase.invoke()
         .catch {
           Log.e("DetailViewModel", "Error fetching article detail: ${it.message}")
@@ -69,6 +67,5 @@ open class HomeViewModel @Inject constructor(
   }
 
   override fun dispose() {
-    compositeDisposable.dispose()
   }
 }

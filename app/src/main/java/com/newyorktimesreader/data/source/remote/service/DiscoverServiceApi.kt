@@ -1,8 +1,6 @@
 package com.newyorktimesreader.data.source.remote.service
 
 import com.newyorktimesreader.data.source.remote.response.DiscoverServiceResponse
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.flow.Flow
 import retrofit2.http.GET
 import retrofit2.http.Query
 

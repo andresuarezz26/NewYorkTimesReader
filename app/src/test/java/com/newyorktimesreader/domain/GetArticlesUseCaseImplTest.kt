@@ -2,8 +2,11 @@ package com.newyorktimesreader.domain
 
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.domain.repository.ArticlesRepository
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.internal.schedulers.TrampolineScheduler
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,37 +22,28 @@ class GetArticlesUseCaseImplTest {
   private lateinit var getArticlesUseCase: GetArticlesUseCase
   private val article: Article = mock()
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   @Before
   fun setUp() {
-    val trampolineScheduler = TrampolineScheduler.instance()
-    getArticlesUseCase = GetArticlesUseCaseImpl(trampolineScheduler, repository)
+    val dispatcher = UnconfinedTestDispatcher()
+    getArticlesUseCase = GetArticlesUseCaseImpl(dispatcher, repository)
   }
 
   @Test
-  fun `when repository returns empty list then use case returns empty list`() {
-    whenever(repository.getArticles()).thenReturn(Single.just(emptyList()))
+  fun `when repository returns empty list then use case returns empty list`() = runTest {
+    whenever(repository.getArticles()).thenReturn(flowOf(emptyList()))
     val expectedArticleCount = 0
-    val testObserver = getArticlesUseCase.invoke().test()
-
-    testObserver.assertComplete()
-    testObserver.assertNoErrors()
-
-    testObserver.assertValueCount(1)
-
-    val emittedList = testObserver.values().first()
-    assert(emittedList.size == expectedArticleCount)
+    val list = getArticlesUseCase.invoke().first()
+    assert(list.size == expectedArticleCount)
   }
 
   @Test
-  fun `when repository returns list with 2 items then use case returns list with 2 items`() {
+  fun `when repository returns list with 2 items then use case returns list with 2 items`()  = runTest  {
     val articles = listOf(article, article)
-    whenever(repository.getArticles()).thenReturn(Single.just(articles))
+    whenever(repository.getArticles()).thenReturn(flowOf(articles))
     val expectedArticleCount = 2
-    val testObserver = getArticlesUseCase.invoke().test()
+    val articleListResult = getArticlesUseCase.invoke().first()
 
-    testObserver.assertComplete()
-    testObserver.assertNoErrors()
-    val emittedList = testObserver.values().first()
-    assert(emittedList.size == expectedArticleCount)
+    assert(articleListResult.size == expectedArticleCount)
   }
 }

@@ -1,7 +1,6 @@
 package com.newyorktimesreader.domain.repository
 
 import com.newyorktimesreader.domain.model.Article
-import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.flow.Flow
 
 /**

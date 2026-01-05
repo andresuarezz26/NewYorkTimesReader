@@ -2,8 +2,14 @@ package com.newyorktimesreader.domain
 
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.domain.repository.ArticlesRepository
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.internal.schedulers.TrampolineScheduler
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,27 +26,32 @@ class GetArticleDetailUseCaseImplTest {
 
   private val article: Article = mock()
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   @Before
   fun setUp() {
-    val trampoline = TrampolineScheduler.instance()
-    useCase = GetArticleDetailUseCaseImpl(trampoline, repository)
+    val dispatcher = UnconfinedTestDispatcher()
+    useCase = GetArticleDetailUseCaseImpl(dispatcher, repository)
   }
 
   @Test
-  fun `when use case is invoked and there is an article then return success`() {
+  fun `when use case is invoked and there is an article then return success`() = runTest {
     whenever(repository.getArticleDetail("1")).thenReturn(
-      Single.just(article))
-    val observer = useCase("1").test()
-    observer.assertComplete()
-    observer.assertNoErrors()
-    observer.assertValue(article)
+      flowOf(article))
+    val observer = useCase("1").first()
+
+    assertEquals(article, observer)
   }
 
   @Test
-  fun `when use case is invoked and there are no articles then return error`() {
+  fun `when use case is invoked and there are no articles then return error`() = runTest {
+    val expectedError = NoSuchElementException()
     whenever(repository.getArticleDetail("1")).thenReturn(
-      Single.error(NoSuchElementException()))
-    val observer = useCase("1").test()
-    observer.assertError(NoSuchElementException::class.java)
+      flow { throw expectedError }
+    )
+
+    // 2. Act & Assert: Verify that collecting the flow throws the expected exception
+    assertFailsWith<NoSuchElementException> {
+      useCase("1").first()
+    }
   }
 }

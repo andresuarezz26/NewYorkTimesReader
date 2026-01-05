@@ -4,9 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 @Module
 @InstallIn(ViewModelComponent::class) // Scoped for ViewModels
@@ -14,9 +13,9 @@ object RxModule {
 
   @MainScheduler
   @Provides
-  fun provideMainScheduler(): Scheduler = AndroidSchedulers.mainThread()
+  fun provideMainScheduler(): CoroutineDispatcher = Dispatchers.Main
 
   @IoScheduler
   @Provides
-  fun provideIOScheduler(): Scheduler = Schedulers.io()
+  fun provideIOScheduler(): CoroutineDispatcher = Dispatchers.IO
 }

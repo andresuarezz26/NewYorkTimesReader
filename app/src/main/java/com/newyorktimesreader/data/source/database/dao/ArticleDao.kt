@@ -6,9 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.newyorktimesreader.data.source.database.entity.ARTICLE_TABLE
 import com.newyorktimesreader.data.source.database.entity.ArticleEntity
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.flow.Flow
 
 /**
  * CRUD for articles entities

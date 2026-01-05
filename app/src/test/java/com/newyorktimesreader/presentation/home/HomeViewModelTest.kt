@@ -1,17 +1,19 @@
 package com.newyorktimesreader.presentation.home
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.newyorktimesreader.domain.GetArticlesUseCase
 import com.newyorktimesreader.domain.RefreshArticlesUseCase
 import com.newyorktimesreader.domain.model.Article
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.internal.schedulers.TrampolineScheduler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -21,10 +23,6 @@ import org.mockito.kotlin.whenever
 @RunWith(MockitoJUnitRunner::class)
 class HomeViewModelTest {
 
-  @Rule
-  @JvmField
-  public var rule: TestRule = InstantTaskExecutorRule()
-
   val getArticlesUseCase: GetArticlesUseCase = mock()
   val refreshArticlesUseCase: RefreshArticlesUseCase = mock()
 
@@ -33,36 +31,38 @@ class HomeViewModelTest {
   val result = getMockList()
 
   // 🔑 1. Setup method to configure mocks
+  @OptIn(ExperimentalCoroutinesApi::class)
   @Before
   fun setup() {
     // The use case is invoked when viewmodel inits
     whenever(getArticlesUseCase())
-      .thenReturn(Single.just(result))
-    val trampolineScheduler = TrampolineScheduler.instance()
+      .thenReturn(flowOf(result))
+    val dispatcher = UnconfinedTestDispatcher()
 
-    homeViewModel = HomeViewModel(getArticlesUseCase, refreshArticlesUseCase,trampolineScheduler)
+    homeViewModel = HomeViewModel(getArticlesUseCase, refreshArticlesUseCase,dispatcher)
+  }
+
+  @OptIn(ExperimentalCoroutinesApi::class)
+  @After
+  fun tearDown() {
+    // 3. Always reset after the test
+    Dispatchers.resetMain()
   }
 
   @Test
-  fun `when get articles success then verify the list of articles correspons with the usecase returned data`() {
-    assertEquals(result, homeViewModel.listOfArticles.value)
-    assertEquals(false, homeViewModel.isRefreshing.value)
-  }
+  fun `when get articles success then verify the list of articles correspons with the usecase returned data`() =
+    runTest {
+      assertEquals(result, homeViewModel.listOfArticles.value)
+      assertEquals(false, homeViewModel.isRefreshing.value)
+    }
 
   @Test
-  fun `when refresh the data is invoked then verify the list of articles correspons with the usecase returned data`() {
+  fun `when refresh the data is invoked then verify the list of articles correspons with the usecase returned data`() = runTest {
     val result = getMockListWith2Articles()
-    whenever(refreshArticlesUseCase.invoke()).thenReturn(Single.just(result))
+    whenever(refreshArticlesUseCase.invoke()).thenReturn(flowOf(result))
     homeViewModel.refreshArticles()
     assertEquals(result, homeViewModel.listOfArticles.value)
     assertEquals(false, homeViewModel.isRefreshing.value)
-  }
-
-  @Test
-  fun `when dispose is invoked then verify composite disposable is disposed`() {
-    homeViewModel.dispose()
-
-    assertTrue(homeViewModel.compositeDisposable.isDisposed)
   }
 
 
