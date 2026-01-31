@@ -11,14 +11,6 @@ plugins {
   id("androidx.room")
 }
 
-val props = Properties()
-val propFile = rootProject.file("local.properties")
-
-if (propFile.exists()) {
-  // Load the file contents into the 'props' variable
-  propFile.inputStream().use { props.load(it) }
-}
-
 android {
   namespace = "com.newyorktimesreader"
   compileSdk = 36
@@ -31,10 +23,6 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    buildConfigField(
-      "String",
-      "NYT_API_KEY",
-      "\"${props.getProperty("NYT_API_KEY", "DEFAULT_FALLBACK_KEY")}\"")
   }
 
   room {
@@ -63,9 +51,11 @@ android {
 
 dependencies {
 
+  implementation(project(":domain"))
+  implementation(project(":data"))
+
   // Compose
   implementation(libs.androidx.navigation.compose)
-  implementation(libs.androidx.compose.runtime.livedata)
   androidTestImplementation(libs.androidx.compose.ui.test.junit)
   debugImplementation(libs.androidx.compose.ui.test.manifest)
   implementation(libs.androidx.activity.compose)
@@ -83,10 +73,8 @@ dependencies {
   ksp(libs.dagger.hilt.android.compiler)
   implementation(libs.hilt.navigation.compose)
 
-  // RxJava
-  implementation(libs.rx.java)
-  implementation(libs.rx.kotlin)
-  implementation(libs.rx.android)
+  // Coroutines
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
   // Mockito
   testImplementation(libs.mockito.core)
@@ -103,28 +91,15 @@ dependencies {
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
 
-  // Retrofit
-  implementation(libs.retrofit)
-  implementation(libs.retrofit.converter.gson)
-  implementation(libs.retrofit.adapter.rxjava3)
-
-  // Logging interceptor
-  implementation(libs.httpLoggingInterceptor)
-
-  // Room
-  implementation(libs.room.runtime)
-  ksp(libs.room.compiler)
-  implementation(libs.room.rx.java3)
-  testImplementation(libs.room.testing)
-
   // General Test
+  androidTestImplementation(platform(libs.androidx.compose.bom))
   testImplementation(libs.androidx.core.testing)
   testImplementation(kotlin("test"))
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
-  androidTestImplementation(platform(libs.androidx.compose.bom))
   androidTestImplementation(libs.androidx.ui.test.junit4)
+  testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)

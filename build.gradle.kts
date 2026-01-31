@@ -7,4 +7,5 @@ plugins {
   id("com.google.dagger.hilt.android") version "2.57.1" apply false
   val room_version = "2.8.4"
   id("androidx.room") version "$room_version" apply false
+  alias(libs.plugins.android.library) apply false
 }

@@ -1,18 +1,19 @@
 package com.newyorktimesreader.presentation.home
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.newyorktimesreader.domain.di.MainScheduler
+import androidx.lifecycle.viewModelScope
 import com.newyorktimesreader.domain.GetArticlesUseCase
 import com.newyorktimesreader.domain.RefreshArticlesUseCase
-import com.newyorktimesreader.domain.di.IoScheduler
+import com.newyorktimesreader.domain.di.MainScheduler
 import com.newyorktimesreader.domain.model.Article
 import com.newyorktimesreader.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the Home Screen.
@@ -24,50 +25,47 @@ import javax.inject.Inject
 open class HomeViewModel @Inject constructor(
   private val getArticlesUseCase: GetArticlesUseCase,
   private val refreshArticlesUseCase: RefreshArticlesUseCase,
-  @param:MainScheduler private val mainScheduler: Scheduler
+  @param:MainScheduler private val mainDispatcher: CoroutineDispatcher
 ) :
   BaseViewModel() {
 
-  internal val compositeDisposable = CompositeDisposable()
-  private val _listOfArticles = MutableLiveData<List<Article>>()
-  val listOfArticles: LiveData<List<Article>> = _listOfArticles
+  private val _listOfArticles = MutableStateFlow<List<Article>>(listOf())
+  val listOfArticles: StateFlow<List<Article>> = _listOfArticles
 
-  private val _isRefreshing = MutableLiveData(false)
-  val isRefreshing: LiveData<Boolean> = _isRefreshing
+  private val _isRefreshing = MutableStateFlow(false)
+  val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
   init {
     getArticles()
   }
 
   private fun getArticles() {
-    compositeDisposable.add(
+    _isRefreshing.value = true
+    viewModelScope.launch(mainDispatcher) {
       getArticlesUseCase.invoke()
-        .observeOn(mainScheduler)
-        .doOnSubscribe { _isRefreshing.value = true}
-        .doFinally { _isRefreshing.value = false }
-        .subscribe({
+        .catch {
+          Log.e("DetailViewModel", "Error fetching article detail: ${it.message}")
+        }
+        .collect {
           _listOfArticles.value = it
-        }, {
-          Log.d("HomeVM", "Data Error: ${it.message}")
-        })
-    )
+          _isRefreshing.value = false
+        }
+    }
   }
 
-  fun refreshArticles(){
-    compositeDisposable.add(
+  fun refreshArticles() {
+    viewModelScope.launch(mainDispatcher) {
       refreshArticlesUseCase.invoke()
-        .observeOn(mainScheduler)
-        .doOnSubscribe { _isRefreshing.value = true}
-        .doFinally { _isRefreshing.value = false }
-        .subscribe({
+        .catch {
+          Log.e("DetailViewModel", "Error fetching article detail: ${it.message}")
+        }
+        .collect {
           _listOfArticles.value = it
-        }, {
-          Log.d("HomeVM", "Data Error: ${it.message}")
-        })
-    )
+          _isRefreshing.value = false
+        }
+    }
   }
 
   override fun dispose() {
-    compositeDisposable.dispose()
   }
 }
